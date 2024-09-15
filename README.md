@@ -6,6 +6,7 @@ CodeMerge is a command-line tool for merging multiple code files into a single o
 
 - Merge multiple code files into one output file
 - Specify files/directories to ignore during merging
+- Compare two commits and merge changed files into one output file.
 - Calculate token counts for each file and total tokens
 - Verbose output mode for detailed information
 - Written in Go for fast performance
@@ -32,12 +33,21 @@ To merge code files, use the `merge` command:
 codemerge merge -o merged.txt
 ```
 
-
 This will merge files into the output file `merged.txt`.
 
 Additional options:
 - `-o, --output`: Specify the output file name (required)
 - `-i, --ignores`: Specify files/directories to ignore (can be used multiple times)
+- `-v, --verbose`: Enable verbose output mode
+
+### Comparing Two Commits and Merging Changed Files
+
+```bash
+codemerge diff --commit1 <commit1> --commit2 <commit2> -o <output-file>
+```
+
+Additional options:
+- `-o, --output`: Specify the output file name (required)
 - `-v, --verbose`: Enable verbose output mode
 
 ### Calculating Tokens
@@ -47,7 +57,6 @@ To calculate token counts without merging, use the `tokens` command:
 ```bash
 codemerge tokens -c 5
 ```
-
 
 This will calculate the token counts for each file and display the top 5 files with the most tokens.
 

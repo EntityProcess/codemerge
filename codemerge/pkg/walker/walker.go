@@ -3,11 +3,12 @@ package walker
 import (
 	"bufio"
 	"fmt"
+	"io/fs"
+	"strings"
+
 	ignore "github.com/sabhiram/go-gitignore"
 	"github.com/spf13/afero"
 	"github.com/tiktoken-go/tokenizer"
-	"io/fs"
-	"strings"
 )
 
 type TokenizedFile struct {
@@ -114,6 +115,42 @@ func (w *Walker) process(path string, info fs.FileInfo) ([]byte, error) {
 	}
 
 	return content, nil
+}
+
+func (w *Walker) ProcessFile(path string) error {
+	info, err := w.os.Stat(path)
+	if err != nil {
+		return err
+	}
+
+	if info.IsDir() {
+		return nil
+	}
+
+	content, err := w.process(path, info)
+	if err != nil {
+		return err
+	}
+
+	if w.verbose {
+		fmt.Println("File: " + path + " Tokens: " + fmt.Sprint(w.tokenizers[path].TokenLength))
+	}
+
+	// Write the file path and content to the writer
+	_, err = w.writer.WriteString("File: " + path + "\n")
+	if err != nil {
+		return err
+	}
+	_, err = w.writer.Write(content)
+	if err != nil {
+		return err
+	}
+	_, err = w.writer.WriteString("\n")
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (w *Walker) Walk() (afero.File, error) {
