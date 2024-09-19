@@ -11,7 +11,6 @@ var appCmd = &cli.App{
 	Commands: []*cli.Command{
 		mergeCmd,
 		tokenCmd,
-		diffCmd,
 	},
 }
 
